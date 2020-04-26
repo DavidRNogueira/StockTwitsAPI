@@ -2,6 +2,7 @@ package com.orbis.StockTwitsChallenge.service;
 
 import com.orbis.StockTwitsChallenge.client.StockTwitsClient;
 import com.orbis.StockTwitsChallenge.dto.MessagesDto;
+import com.orbis.StockTwitsChallenge.dto.TweetDto;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -16,6 +17,10 @@ public class StockTwitsService {
   }
 
   public MessagesDto getTweetsBySymbol(String symbol){
-      return stockTwitsClient.getTweetsBySymbols(symbol);
+      MessagesDto messagesDto = stockTwitsClient.getTweetsBySymbols(symbol);
+      for (TweetDto tweetDto : messagesDto.getMessages()){
+          tweetDto.setSymbol(symbol);
+      }
+      return messagesDto;
   }
 }

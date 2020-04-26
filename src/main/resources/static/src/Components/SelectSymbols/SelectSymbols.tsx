@@ -8,18 +8,24 @@ import {
     SymbolName, 
     TagsHeader, 
     InputDiv, 
-    FormError 
+    FormError, 
+    TweetCounterHeader,
+    TweetCounterList,
+    TweetCounterItem,
+    TweetCounterDiv
 } from "./SelectSymbolsStyles";
 import axios from "axios"
 import { Context } from "../../App";
+import { ITweet, ITweetCounter } from "../../interfaces";
 
 const SelectSymbols:FC = ():JSX.Element => {
 		const context = useContext(Context);
 
     const [currentSymbol , setCurrentSymbol] = useState<string>("");
-    const [allSymbols , setAllSymbols] = useState<string[]>(["ASDF"]);
+    const [allSymbols , setAllSymbols] = useState<string[]>([]);
     const [compErrors , setCompErrors] = useState<string[]>([]);
-    const [tweets , setTweets] = useState<string[]>([]);
+	const [tweets , setTweets] = useState<ITweet[]>([]);
+	const [tweetCounter , setTweetCounter] = useState<ITweetCounter[]>([]);
    
     const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
             const newValue = event.currentTarget.value.toUpperCase();
@@ -33,8 +39,19 @@ const SelectSymbols:FC = ():JSX.Element => {
     }
 
     const handleDeleteTag = (deletedSymbol: string) => {
-        const newArray = allSymbols.filter(symbol => symbol !== deletedSymbol)
-        setAllSymbols(newArray);
+        console.log(context.state)
+        const newSymbols = allSymbols.filter(symbol => symbol !== deletedSymbol)
+		setAllSymbols(newSymbols);
+
+		const newTweets = tweets.filter(tweet => tweet.symbol !== deletedSymbol);
+			context.dispatch({
+				type: "UPDATE_TWEETS" ,
+				payload : [...newTweets]
+			})
+        setTweets([...newTweets])
+                
+        const newTweetCounter = tweetCounter.filter(counter => counter.symbol !== deletedSymbol);
+        setTweetCounter(newTweetCounter);
     }
 
     const handleAddNewSymbol = async () => {
@@ -44,17 +61,21 @@ const SelectSymbols:FC = ():JSX.Element => {
             return;
         }
         if (currentSymbol.length > 2 && currentSymbol.length < 6){
-            setAllSymbols([...allSymbols , currentSymbol ])
             const response = await axios.get(`/get-tweets-by-symbol?symbol=${currentSymbol}`)
-                if (response.status === 200){
-									setTweets([...tweets , response.data]);
-									context.dispatch({
-										type: "UPDATE_TWEETS" , 
-										payload : tweets
-									})
-
-									console.log(context.state);
-                }
+              if (response.status === 200){
+				const newTweets = [...tweets , ...response.data.messages];
+				context.dispatch({
+				    type: "UPDATE_TWEETS" , 
+				    payload : newTweets
+                })
+                setTweets(newTweets);
+                setTweetCounter([...tweetCounter , {symbol : currentSymbol , mentions : response.data.messages.length}])
+                setAllSymbols([...allSymbols , currentSymbol ])
+              } 
+              // not working
+              if (response.status !== 200){
+                  setCompErrors([...compErrors , "not200"])
+              }
         }
         setCurrentSymbol("")
     }
@@ -84,6 +105,23 @@ const SelectSymbols:FC = ():JSX.Element => {
             </InputDiv>
             {
                 compErrors.includes("repeat") && <FormError>You already added that symbol.</FormError>
+            }
+            {
+                compErrors.includes("not200") && <FormError>Ops! Something went wrong. Try again.</FormError>
+            }
+            {
+                tweetCounter.length > 0 &&
+                <TweetCounterDiv>
+                    <TweetCounterHeader>Mentions</TweetCounterHeader>
+                    <TweetCounterList>
+                        {
+                            tweetCounter !== [] &&
+                            tweetCounter.map(counter => {
+                                return <TweetCounterItem>{counter.symbol} : {counter.mentions} / 10</TweetCounterItem>
+                            })
+                        }
+                    </TweetCounterList>
+                </TweetCounterDiv>
             }
         </SelectSymbolsDiv>
     )

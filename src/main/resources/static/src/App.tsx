@@ -1,6 +1,7 @@
-import React , {FC , useContext , useReducer} from 'react';
+import React , {FC , useReducer} from 'react';
 import SelectSymbols from './Components/SelectSymbols/SelectSymbols';
 import { ITweet, ActionInterface } from './interfaces';
+import Tweets from './Components/Tweets/Tweets';
 
 const initState:(string|number)[] = []
 export const Context = React.createContext<any>(initState);
@@ -10,19 +11,20 @@ const reducer = (state:ITweet, action:ActionInterface) => {
   
   switch (type){
       case "UPDATE_TWEETS":
-          return {...payload}
+          return [...payload]
       default:
-          return initState;
+          return state;
   }
 }
 
 const App:FC = ():JSX.Element => {
-  const [state,dispatch] = useReducer(reducer, initState)
+  const [state,dispatch] = useReducer<any>(reducer, initState)
 
   return (
     <Context.Provider value={{state , dispatch}}>
       <h1 className="pageHeader">StockTwits API Challenge</h1>
       <SelectSymbols/>
+      <Tweets/>
     </Context.Provider>
   )
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true )
 public class TweetDto {
 
+    private String symbol;
     private int id;
     @JsonProperty("body")
     private String body;
@@ -44,5 +45,13 @@ public class TweetDto {
 
     public void setUser(UserDto user) {
         this.user = user;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 }

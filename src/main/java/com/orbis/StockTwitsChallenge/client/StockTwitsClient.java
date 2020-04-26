@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbis.StockTwitsChallenge.dto.MessagesDto;
 import com.orbis.StockTwitsChallenge.dto.SearchSymbolsDto;
 import com.orbis.StockTwitsChallenge.dto.SymbolObjDto;
+import com.orbis.StockTwitsChallenge.dto.TweetDto;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -75,57 +76,6 @@ public class StockTwitsClient {
       httpURLConnection.disconnect();
     }
     return null;
-  }
-
-  private boolean doesSymbolExist (String symbol) {
-    try {
-      BufferedReader reader;
-      String line;
-      StringBuffer responseContent = new StringBuffer();
-
-      URL url = new URL("https://api.stocktwits.com/api/2/search/symbols.json?q=" + symbol);
-      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      connection.setRequestMethod("GET");
-      connection.setConnectTimeout(5000);
-      connection.setReadTimeout(5000);
-      connection.connect();
-
-      int status = connection.getResponseCode();
-
-      if (status > 299) {
-        reader = new BufferedReader(new InputStreamReader(httpURLConnection.getErrorStream()));
-
-        while ((line = reader.readLine()) != null){
-          responseContent.append(line);
-        }
-        reader.close();
-        connection.disconnect();
-      } else {
-        reader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-
-        while ((line = reader.readLine()) != null){
-          responseContent.append(line);
-        }
-        reader.close();
-        connection.disconnect();
-
-        String results = responseContent.toString();
-        SearchSymbolsDto symbols = objectReader.readValue(results);
-        List<String> resultsArray =
-            symbols.getResults()
-                .stream()
-                .map(SymbolObjDto::getSymbol)
-                .collect(Collectors.toList());
-        return resultsArray.contains(symbol);
-      }
-
-    }
-    catch (MalformedURLException e){
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return false;
   }
 
 }

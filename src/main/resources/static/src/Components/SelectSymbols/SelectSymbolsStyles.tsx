@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { GLOBAL_RED, PRIMARY_GREY } from "../../constants";
 
 export const SelectSymbolsDiv = styled.div `
 display:flex;
@@ -44,13 +45,13 @@ flex-wrap:wrap;
 export const TagDiv = styled.a `
 color:black;
 text-decoration:none;
-background-color:#dbdbdb;
+background-color:${PRIMARY_GREY};
 padding:0.5em;
 border-radius:10px;
 margin:1em;
 
 :hover {
-    background-color:#eb4559;
+    background-color:${GLOBAL_RED};
 }
 `
 
@@ -64,4 +65,26 @@ color:red;
 font-size:1em;
 text-align:center;
 margin-top:0.5em;
+`
+
+export const TweetCounterDiv = styled.div `
+background-color: ${PRIMARY_GREY};
+width:30%;
+margin:auto;
+margin-top:2em;
+padding-bottom:2em;
+border-radius:10px;
+`
+
+export const TweetCounterHeader = styled.h1 `
+text-align:center;
+`
+
+export const TweetCounterList = styled.ul `
+width:50%;
+margin:auto;
+`
+
+export const TweetCounterItem = styled.li `
+font-size:1.5em;
 `

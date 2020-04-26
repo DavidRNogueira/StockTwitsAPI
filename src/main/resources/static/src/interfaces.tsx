@@ -1,4 +1,5 @@
 export interface ITweet {
+    symbol : string ,
     id : number ,
     body : string ,
     created_at: string , 
@@ -12,5 +13,10 @@ export interface ITweet {
   export interface ActionInterface {
     type:any,
     payload:any
+}
+
+export interface ITweetCounter {
+  symbol: string ,
+  mentions : number
 }
   
