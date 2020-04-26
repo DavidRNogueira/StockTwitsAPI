@@ -1,4 +1,4 @@
-import React , {FC, useState, useContext} from "react";
+import React , {FC, useState, useContext, useEffect} from "react";
 import { 
     SelectSymbolsDiv,
     SymbolInput, 
@@ -16,13 +16,51 @@ import { Context } from "../../App";
 import { ITweet, ITweetCounter } from "../../interfaces";
 
 const SelectSymbols:FC = ():JSX.Element => {
-	const context = useContext(Context);
+  const context = useContext(Context);
   const [currentSymbol , setCurrentSymbol] = useState<string>("");
   const [allSymbols , setAllSymbols] = useState<string[]>([]);
   const [compErrors , setCompErrors] = useState<string[]>([]);
-	const [tweets , setTweets] = useState<ITweet[]>([]);
-	const [tweetCounter , setTweetCounter] = useState<ITweetCounter[]>([]);
-   
+  const [tweets , setTweets] = useState<ITweet[]>([]);
+  const [tweetCounter , setTweetCounter] = useState<ITweetCounter[]>([]);
+  let interval: any = null;
+
+  const startInterval = () => {
+    if (allSymbols.length > 0){
+      interval = setInterval(() => {
+          allSymbols.forEach(async symbol => {
+            try {
+              const response = await axios.get(`/get-tweets-by-symbol?symbol=${symbol}`)
+                if (response.status === 200){
+                  const arrayForSymbol = tweets.filter(tweet => tweet.symbol === symbol);
+                  if ( response.data.messages === arrayForSymbol){
+                    return;
+                  } else {
+                    console.log("UPDATE")
+                    const newTweets = [...response.data.messages , ...tweets ];
+                    context.dispatch({
+                      type: "UPDATE_TWEETS" , 
+                      payload : newTweets
+                      })
+                    setTweets(newTweets);
+                  }
+  
+                }
+            }
+            catch (error){
+              console.log("ERROR")
+            }
+          })
+  
+        } , 10000)  }}
+
+  const endInterval = () => {
+    if (allSymbols.length > 0){
+      return;
+    }
+    clearInterval(interval);
+    interval = null;
+  }
+    
     const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
             const newValue = event.currentTarget.value.toUpperCase();
             if (newValue.length > 5){
@@ -32,9 +70,11 @@ const SelectSymbols:FC = ():JSX.Element => {
     }
 
     const handleDeleteTag = (deletedSymbol: string) => {
-        console.log(context.state)
-        const newSymbols = allSymbols.filter(symbol => symbol !== deletedSymbol)
-		setAllSymbols(newSymbols);
+      const newSymbols = allSymbols.filter(symbol => symbol !== deletedSymbol)
+		  setAllSymbols(newSymbols);
+      if (newSymbols.length < 1) {
+        endInterval();
+      }
 
 		const newTweets = tweets.filter(tweet => tweet.symbol !== deletedSymbol);
 			context.dispatch({
@@ -64,7 +104,8 @@ const SelectSymbols:FC = ():JSX.Element => {
 										})
 										setTweets(newTweets);
 										setTweetCounter([...tweetCounter , {symbol : currentSymbol , mentions : response.data.messages.length}])
-										setAllSymbols([...allSymbols , currentSymbol ])
+                    setAllSymbols([...allSymbols , currentSymbol ])
+                    startInterval();
 									}} 
 							catch (error) {
 								setCompErrors([...compErrors , "not200"])

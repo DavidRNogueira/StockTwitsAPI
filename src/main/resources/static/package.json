@@ -9,6 +9,7 @@
     "@types/axios": "^0.14.0",
     "@types/styled-components": "^5.1.0",
     "axios": "^0.19.2",
+    "heroku": "^7.39.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
