@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ViewController {
 
-  @GetMapping("/")
+  @GetMapping(value="/")
   public String toPage (){
     return "../static/build/index";
   }
