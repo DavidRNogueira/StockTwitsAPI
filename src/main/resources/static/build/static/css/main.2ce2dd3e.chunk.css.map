@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.css"],"names":[],"mappings":"AAAA,KACI,kCAAoC,CACpC,QAAQ,CACR,wBACJ,CAEA,YACI,aAAa,CACb,iBACJ","file":"main.2ce2dd3e.chunk.css","sourcesContent":["html {\n    font-family: 'Gothic A1', sans-serif;\n    margin:0;\n    background-color:#f7f7f7;\n}\n\n.pageHeader {\n    font-size:3em;\n    text-align:center;\n}"]}
