@@ -30,7 +30,7 @@ const Tweets:FC = ():JSX.Element => {
                             <MessageDiv key={tweet.id}>
                                 <UserDiv>
                                     <Avatar src={tweet.user.avatar_url}/>
-                                    <Username>{tweet.user.username}</Username>
+                                    <Username>@{tweet.user.username}</Username>
                                 </UserDiv>
                                 <Body>{tweet.body}</Body>
                                 <DateDiv>

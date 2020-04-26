@@ -67,24 +67,7 @@ text-align:center;
 margin-top:0.5em;
 `
 
-export const TweetCounterDiv = styled.div `
-background-color: ${PRIMARY_GREY};
-width:30%;
-margin:auto;
-margin-top:2em;
-padding-bottom:2em;
-border-radius:10px;
-`
-
-export const TweetCounterHeader = styled.h1 `
-text-align:center;
-`
-
-export const TweetCounterList = styled.ul `
-width:50%;
-margin:auto;
-`
-
-export const TweetCounterItem = styled.li `
-font-size:1.5em;
+export const TweetCounter = styled.i `
+font-size:0.75em;
+color:grey;
 `

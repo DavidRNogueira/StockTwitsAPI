@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import { PRIMARY_GREY } from "../../constants"
 
 export const TweetsDiv = styled.div `
 width:80%;
@@ -12,11 +11,13 @@ align-items:center;
 
 export const MessageDiv = styled.div `
 width:70%;
-background-color:${PRIMARY_GREY};
 border-radius:10px;
 margin:0.5em;
 padding:1em;
 display:flex;
+flex-direction:row;
+justify-content:space-evenly;
+align-items:center;
 `
 
 export const Username = styled.strong `

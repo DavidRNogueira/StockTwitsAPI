@@ -5,8 +5,6 @@ import com.orbis.StockTwitsChallenge.dto.MessagesDto;
 import com.orbis.StockTwitsChallenge.dto.TweetDto;
 import org.springframework.stereotype.Service;
 
-import java.net.MalformedURLException;
-
 @Service
 public class StockTwitsService {
 
